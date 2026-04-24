@@ -1,0 +1,374 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans)}
+.form-wrap{max-width:680px;padding:0 0 2rem}
+.form-header{padding:1.5rem 1.5rem 1rem;border-bottom:0.5px solid var(--color-border-tertiary);margin-bottom:1.5rem}
+.form-header p{font-size:13px;color:var(--color-text-secondary);margin-top:6px;line-height:1.6}
+.section-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);margin-bottom:1rem;overflow:hidden}
+.section-header{display:flex;align-items:center;gap:10px;padding:0.9rem 1.25rem;cursor:pointer;user-select:none;border-bottom:0.5px solid var(--color-border-tertiary)}
+.section-header:hover{background:var(--color-background-secondary)}
+.section-badge{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;flex-shrink:0}
+.section-title{font-size:15px;font-weight:500;color:var(--color-text-primary);flex:1}
+.section-desc{font-size:12px;color:var(--color-text-secondary);margin-top:1px}
+.chevron{width:16px;height:16px;transition:transform 0.2s;color:var(--color-text-tertiary)}
+.chevron.open{transform:rotate(180deg)}
+.section-body{padding:1.25rem}
+.field-group{margin-bottom:1.25rem}
+.field-group:last-child{margin-bottom:0}
+.field-label{font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px;display:block}
+.field-hint{font-size:12px;color:var(--color-text-secondary);margin-bottom:6px;line-height:1.5}
+textarea{width:100%;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:8px 10px;font-size:13px;font-family:var(--font-sans);color:var(--color-text-primary);background:var(--color-background-primary);resize:vertical;min-height:70px;line-height:1.5}
+textarea:focus{outline:none;border-color:var(--color-border-primary)}
+input[type=text]{width:100%;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:7px 10px;font-size:13px;font-family:var(--font-sans);color:var(--color-text-primary);background:var(--color-background-primary)}
+input[type=text]:focus{outline:none;border-color:var(--color-border-primary)}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.checklist{display:flex;flex-direction:column;gap:6px;margin-top:4px}
+.checklist label{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:var(--color-text-secondary);cursor:pointer;line-height:1.4}
+.checklist input[type=checkbox]{margin-top:2px;flex-shrink:0;accent-color:#534AB7}
+.divider{height:0.5px;background:var(--color-border-tertiary);margin:1rem 0}
+.export-bar{display:flex;gap:10px;justify-content:flex-end;padding:1rem 0 0}
+.btn{padding:8px 18px;border-radius:var(--border-radius-md);font-size:13px;font-weight:500;cursor:pointer;border:0.5px solid var(--color-border-secondary);background:transparent;color:var(--color-text-primary)}
+.btn:hover{background:var(--color-background-secondary)}
+.btn-primary{background:#534AB7;color:#fff;border-color:#534AB7}
+.btn-primary:hover{background:#3C3489;border-color:#3C3489}
+.progress-bar{height:3px;background:var(--color-border-tertiary);border-radius:2px;margin:12px 0 0}
+.progress-fill{height:3px;background:#534AB7;border-radius:2px;transition:width 0.3s}
+.toast{display:none;padding:10px 16px;background:var(--color-background-success);color:var(--color-text-success);border-radius:var(--border-radius-md);font-size:13px;margin-top:1rem;border:0.5px solid var(--color-border-success)}
+</style>
+
+<div class="form-wrap">
+  <div class="form-header">
+    <h2 style="font-size:18px;font-weight:500;color:var(--color-text-primary)">Formulaire de collecte d'informations</h2>
+    <p>Ce formulaire permettra à votre développeur web de créer un site moderne et complet pour votre organisation. Répondez avec autant de détails que possible — chaque réponse compte.</p>
+    <div class="progress-bar"><div class="progress-fill" id="progress" style="width:0%"></div></div>
+    <p style="font-size:11px;color:var(--color-text-tertiary);margin-top:4px" id="progress-label">0 champs remplis</p>
+  </div>
+
+  <div class="section-card">
+    <div class="section-header" onclick="toggle(this)">
+      <div class="section-badge" style="background:#EEEDFE;color:#3C3489">1</div>
+      <div><div class="section-title">Identité de l'organisation</div><div class="section-desc">Nom, vision, mission, valeurs</div></div>
+      <svg class="chevron open" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6l4 4 4-4"/></svg>
+    </div>
+    <div class="section-body">
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label">Nom complet de l'organisation</label>
+          <input type="text" placeholder="Ex : Association Lumière d'Espoir" oninput="updateProgress()">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Sigle / Acronyme (si applicable)</label>
+          <input type="text" placeholder="Ex : ALE" oninput="updateProgress()">
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Slogan ou phrase d'accroche</label>
+        <div class="field-hint">La phrase qui résume votre vision en quelques mots</div>
+        <input type="text" placeholder="Ex : Transformer des vies par l'Évangile et l'amour du prochain" oninput="updateProgress()">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Verset biblique fondateur</label>
+        <div class="field-hint">Le verset qui définit l'ADN de votre organisation</div>
+        <input type="text" placeholder="Ex : Matthieu 28:19 — Allez, faites de toutes les nations des disciples..." oninput="updateProgress()">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Mission (ce que vous faites concrètement)</label>
+        <div class="field-hint">En 2 à 3 phrases, décrivez votre action au quotidien</div>
+        <textarea placeholder="Ex : Nous évangélisons les communautés rurales, distribuons de l'aide alimentaire et formons des leaders locaux..." oninput="updateProgress()"></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Vision (où voulez-vous aller ?)</label>
+        <div class="field-hint">L'état du monde que vous souhaitez contribuer à atteindre</div>
+        <textarea placeholder="Ex : Un Bénin où chaque communauté a accès à l'Évangile et vit dans la dignité..." oninput="updateProgress()"></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Valeurs fondamentales (3 à 5)</label>
+        <div class="field-hint">Les principes sur lesquels vous ne transigez jamais</div>
+        <textarea placeholder="Ex : Foi, Intégrité, Compassion, Excellence, Unité..." oninput="updateProgress()"></textarea>
+      </div>
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label">Année de fondation</label>
+          <input type="text" placeholder="Ex : 2015" oninput="updateProgress()">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Pays / Ville de siège</label>
+          <input type="text" placeholder="Ex : Cotonou, Bénin" oninput="updateProgress()">
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Zones géographiques d'intervention</label>
+        <input type="text" placeholder="Ex : Sud Bénin, Togo, Nigeria..." oninput="updateProgress()">
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-header" onclick="toggle(this)">
+      <div class="section-badge" style="background:#E1F5EE;color:#085041">2</div>
+      <div><div class="section-title">Histoire et équipe</div><div class="section-desc">Fondateur, dirigeants, genèse du projet</div></div>
+      <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6l4 4 4-4"/></svg>
+    </div>
+    <div class="section-body" style="display:none">
+      <div class="field-group">
+        <label class="field-label">Histoire de la fondation</label>
+        <div class="field-hint">Qui a fondé l'organisation ? Dans quel contexte ? Quelle douleur ou appel a conduit à sa création ?</div>
+        <textarea style="min-height:100px" placeholder="Racontez l'histoire avec authenticité — les difficultés du début, le tournant, les premières victoires..." oninput="updateProgress()"></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Nom et titre du fondateur / directeur</label>
+        <input type="text" placeholder="Ex : Pasteur Jean Akpan, Fondateur & Directeur Exécutif" oninput="updateProgress()">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Biographie courte du fondateur</label>
+        <div class="field-hint">Formation, parcours, appel spirituel (5 à 8 lignes)</div>
+        <textarea placeholder="Ex : Né à Cotonou en 1978, Jean Akpan est pasteur depuis 2005..." oninput="updateProgress()"></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Membres de l'équipe dirigeante</label>
+        <div class="field-hint">Nom complet + rôle pour chaque membre (vous pouvez lister plusieurs personnes)</div>
+        <textarea placeholder="Ex :&#10;- Marie Hounkpe — Responsable des programmes&#10;- Paul Dossou — Coordinateur terrain&#10;- Esther Kpade — Chargée de communication" oninput="updateProgress()"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-header" onclick="toggle(this)">
+      <div class="section-badge" style="background:#FAECE7;color:#712B13">3</div>
+      <div><div class="section-title">Activités et programmes</div><div class="section-desc">Évangélisation, aide humanitaire, projets</div></div>
+      <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6l4 4 4-4"/></svg>
+    </div>
+    <div class="section-body" style="display:none">
+      <div class="field-group">
+        <label class="field-label">Activités d'évangélisation</label>
+        <div class="field-hint">Listez chaque activité avec une courte description et sa fréquence</div>
+        <textarea style="min-height:100px" placeholder="Ex :&#10;- Cultes d'évangélisation en plein air (mensuel, villages du sud)&#10;- Émissions radio chrétiennes (hebdomadaire, Radio Bénin)&#10;- Distribution de Bibles et livrets (trimestriel)" oninput="updateProgress()"></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Activités humanitaires et sociales</label>
+        <div class="field-hint">Aide alimentaire, santé, éducation, formation professionnelle...</div>
+        <textarea style="min-height:100px" placeholder="Ex :&#10;- Distribution de vivres (pendant le Ramadan et Noël)&#10;- Consultations médicales gratuites (3x par an)&#10;- Bourses scolaires pour enfants défavorisés (20 bénéficiaires/an)" oninput="updateProgress()"></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Programme phare (le plus impactant ou emblématique)</label>
+        <div class="field-hint">Décrivez-le en détail — c'est ce qui sera mis en avant sur le site</div>
+        <textarea placeholder="Ex : Notre programme 'Villages Lumière' qui consiste à..." oninput="updateProgress()"></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Projets en cours ou à venir</label>
+        <input type="text" placeholder="Ex : Construction d'un centre communautaire à Abomey (2025)..." oninput="updateProgress()">
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-header" onclick="toggle(this)">
+      <div class="section-badge" style="background:#EAF3DE;color:#27500A">4</div>
+      <div><div class="section-title">Impact et chiffres clés</div><div class="section-desc">Résultats, témoignages, partenaires</div></div>
+      <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6l4 4 4-4"/></svg>
+    </div>
+    <div class="section-body" style="display:none">
+      <div class="field-group">
+        <label class="field-label">Chiffres clés depuis la création</label>
+        <div class="field-hint">Soyez précis — ces chiffres seront affichés en grand sur le site</div>
+        <textarea placeholder="Ex :&#10;- Personnes touchées par l'évangélisation : 12 000+&#10;- Villages visités : 45&#10;- Familles aidées : 800&#10;- Partenaires : 12&#10;- Années d'existence : 9" oninput="updateProgress()"></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Témoignages de bénéficiaires</label>
+        <div class="field-hint">Au moins 2 témoignages (nom, témoignage court, accord de publication)</div>
+        <textarea style="min-height:100px" placeholder="Ex :&#10;Nom : Aïchatou Moussa&#10;Témoignage : Grâce à l'aide de cette organisation, j'ai pu...&#10;Accord : Oui" oninput="updateProgress()"></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Partenaires actuels</label>
+        <div class="field-hint">Noms des organisations, églises, entreprises ou institutions partenaires</div>
+        <textarea placeholder="Ex : Église Évangélique de Cotonou, ONG Mercy Ships, Mairie de Porto-Novo..." oninput="updateProgress()"></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Avez-vous des rapports d'activité disponibles ?</label>
+        <div class="checklist">
+          <label><input type="checkbox"> Oui, rapport annuel (PDF disponible)</label>
+          <label><input type="checkbox"> Oui, rapport financier</label>
+          <label><input type="checkbox"> Non, pas encore formalisé</label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-header" onclick="toggle(this)">
+      <div class="section-badge" style="background:#E6F1FB;color:#0C447C">5</div>
+      <div><div class="section-title">Dons et partenariats</div><div class="section-desc">Modes de paiement, offres de collaboration</div></div>
+      <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6l4 4 4-4"/></svg>
+    </div>
+    <div class="section-body" style="display:none">
+      <div class="field-group">
+        <label class="field-label">Modes de don acceptés</label>
+        <div class="checklist">
+          <label><input type="checkbox"> Mobile Money (MTN, Moov...)</label>
+          <label><input type="checkbox"> Virement bancaire</label>
+          <label><input type="checkbox"> PayPal</label>
+          <label><input type="checkbox"> Western Union / MoneyGram</label>
+          <label><input type="checkbox"> Espèces (remise en main)</label>
+          <label><input type="checkbox"> Autre :</label>
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Coordonnées de réception des dons</label>
+        <div class="field-hint">Numéro Mobile Money, IBAN, ou email PayPal selon les options cochées ci-dessus</div>
+        <textarea placeholder="Ex :&#10;MTN MoMo : +229 97 XX XX XX (au nom de...)&#10;IBAN : BJ...&#10;PayPal : dons@monong.org" oninput="updateProgress()"></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Qu'offrez-vous à un partenaire financier ?</label>
+        <div class="field-hint">Visibilité, rapports, visites terrain, mention dans les communications...</div>
+        <textarea placeholder="Ex : Mention sur notre site, rapport trimestriel, visite terrain annuelle, certificat de partenariat..." oninput="updateProgress()"></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Besoins en bénévolat</label>
+        <div class="field-hint">Quels profils recherchez-vous actuellement ?</div>
+        <textarea placeholder="Ex : Médecins, enseignants, comptables, communicants, chauffeurs..." oninput="updateProgress()"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-header" onclick="toggle(this)">
+      <div class="section-badge" style="background:#F1EFE8;color:#444441">6</div>
+      <div><div class="section-title">Médias et contenus</div><div class="section-desc">Photos, vidéos, réseaux sociaux, actualités</div></div>
+      <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6l4 4 4-4"/></svg>
+    </div>
+    <div class="section-body" style="display:none">
+      <div class="field-group">
+        <label class="field-label">Médias disponibles</label>
+        <div class="checklist">
+          <label><input type="checkbox"> Logo (haute résolution, fond transparent)</label>
+          <label><input type="checkbox"> Photos du terrain (activités, équipe, bénéficiaires)</label>
+          <label><input type="checkbox"> Vidéos de présentation ou du terrain</label>
+          <label><input type="checkbox"> Podcast ou émissions audio</label>
+          <label><input type="checkbox"> Charte graphique (couleurs, polices)</label>
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Réseaux sociaux actifs</label>
+        <div class="field-hint">Fournissez les liens complets de chaque page</div>
+        <textarea placeholder="Ex :&#10;Facebook : facebook.com/monong&#10;Instagram : instagram.com/monong&#10;YouTube : youtube.com/@monong&#10;WhatsApp (groupe ou canal) : ..." oninput="updateProgress()"></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">3 à 5 actualités ou sujets récents à publier</label>
+        <div class="field-hint">Ce sont les premiers articles du blog — décrivez brièvement chaque sujet</div>
+        <textarea style="min-height:100px" placeholder="Ex :&#10;1. Mission dans le village de Toffo — mars 2025 (30 personnes converties)&#10;2. Distribution alimentaire de Noël 2024 — 120 familles bénéficiaires&#10;3. Inauguration du puits à Glazoué..." oninput="updateProgress()"></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Qui gérera la publication des actualités sur le site ?</label>
+        <input type="text" placeholder="Nom et rôle de la personne responsable" oninput="updateProgress()">
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-header" onclick="toggle(this)">
+      <div class="section-badge" style="background:#EEEDFE;color:#3C3489">7</div>
+      <div><div class="section-title">Contacts et informations légales</div><div class="section-desc">Coordonnées, statut juridique, langues</div></div>
+      <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6l4 4 4-4"/></svg>
+    </div>
+    <div class="section-body" style="display:none">
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label">Email de contact principal</label>
+          <input type="text" placeholder="contact@monong.org" oninput="updateProgress()">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Numéro de téléphone</label>
+          <input type="text" placeholder="+229 97 XX XX XX" oninput="updateProgress()">
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Adresse physique</label>
+        <input type="text" placeholder="Ex : Rue 123, Quartier Fidjrossè, Cotonou, Bénin" oninput="updateProgress()">
+      </div>
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label">Numéro d'enregistrement officiel</label>
+          <input type="text" placeholder="N° de récépissé ou d'agrément" oninput="updateProgress()">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Date d'enregistrement officiel</label>
+          <input type="text" placeholder="JJ/MM/AAAA" oninput="updateProgress()">
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Langue(s) du site</label>
+        <div class="checklist">
+          <label><input type="checkbox"> Français uniquement</label>
+          <label><input type="checkbox"> Anglais uniquement</label>
+          <label><input type="checkbox"> Bilingue Français / Anglais</label>
+          <label><input type="checkbox"> Autre :</label>
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Informations complémentaires</label>
+        <div class="field-hint">Tout ce qui n'a pas été couvert et que vous jugez important pour le site</div>
+        <textarea placeholder="Ajoutez ici tout élément supplémentaire..." oninput="updateProgress()"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="export-bar">
+    <button class="btn" onclick="copyAll()">Copier toutes les réponses</button>
+    <button class="btn btn-primary" onclick="sendToChat()">Envoyer à Claude ↗</button>
+  </div>
+  <div class="toast" id="toast">Réponses copiées dans le presse-papier !</div>
+</div>
+
+<script>
+function toggle(header){
+  const body=header.nextElementSibling;
+  const chevron=header.querySelector('.chevron');
+  const open=body.style.display!=='none';
+  body.style.display=open?'none':'block';
+  chevron.classList.toggle('open',!open);
+}
+
+function updateProgress(){
+  const inputs=[...document.querySelectorAll('input[type=text],textarea')];
+  const filled=inputs.filter(i=>i.value.trim().length>2).length;
+  const pct=Math.round((filled/inputs.length)*100);
+  document.getElementById('progress').style.width=pct+'%';
+  document.getElementById('progress-label').textContent=filled+' champ'+(filled>1?'s':'')+' rempli'+(filled>1?'s':'')+' sur '+inputs.length;
+}
+
+function collectData(){
+  const sections=document.querySelectorAll('.section-card');
+  let out='';
+  sections.forEach(sec=>{
+    const title=sec.querySelector('.section-title').textContent;
+    out+='\n## '+title+'\n';
+    sec.querySelectorAll('.field-group').forEach(fg=>{
+      const label=fg.querySelector('.field-label');
+      const input=fg.querySelector('input[type=text],textarea');
+      const checks=[...fg.querySelectorAll('input[type=checkbox]:checked')].map(c=>c.parentElement.textContent.trim());
+      if(label){
+        out+='\n**'+label.textContent+'**\n';
+        if(input&&input.value.trim()) out+=input.value.trim()+'\n';
+        if(checks.length) out+=checks.join(', ')+'\n';
+      }
+    });
+  });
+  return out.trim();
+}
+
+function copyAll(){
+  const data=collectData();
+  navigator.clipboard.writeText(data).then(()=>{
+    const t=document.getElementById('toast');
+    t.style.display='block';
+    setTimeout(()=>t.style.display='none',3000);
+  });
+}
+
+function sendToChat(){
+  const data=collectData();
+  if(data.length<50){sendPrompt('Voici les informations collectées pour le site de l\'ONG : (formulaire vide — veuillez remplir les champs)');return;}
+  sendPrompt('Voici les informations que j\'ai collectées auprès des responsables de l\'ONG :\n\n'+data+'\n\nStructure maintenant le contenu complet de chaque page du site à partir de ces informations.');
+}
+</script>
